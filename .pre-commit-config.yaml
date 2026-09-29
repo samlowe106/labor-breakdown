@@ -1,0 +1,53 @@
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-illegal-windows-names
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: name-tests-test
+        # enforce the conventional test_*.py prefix (default requires *_test.py)
+        args: [--pytest-test-first]
+      - id: pretty-format-json
+        # --autofix reformats instead of only failing; keep the author's key order
+        args: [--autofix, --no-sort-keys]
+      # Only acts on files you list under `files:` (it sorts flat "simple" YAML
+      # alphabetically), so it is a no-op until you point it at such a file.
+      - id: sort-simple-yaml
+      - id: trailing-whitespace
+        # preserve Markdown hard line breaks (a line ending in two spaces)
+        args: [--markdown-linebreak-ext, "md,markdown"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.4
+    hooks:
+      - id: ruff
+        name: ruff (lint + autofix)
+        # Rules are configured in [tool.ruff.lint] in pyproject.toml (shared with
+        # your editor). --fix makes commits auto-apply fixable violations.
+        # Replaces flake8 + isort (import ordering is ruff's "I" rule set below).
+        args: [--fix]
+
+  - repo: https://github.com/psf/black
+    rev: 26.5.1
+    hooks:
+      - id: black
+        args: [--safe]
+
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: v0.0.74
+    hooks:
+      # ty reads its config from [tool.ty] in pyproject.toml, not CLI flags.
+      - id: ty
